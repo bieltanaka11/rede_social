@@ -1,6 +1,6 @@
 # Sistema de Rede Social Distribuída
 
-Este documento apresenta uma documentação completa do Sistema de Rede Social Distribuída, detalhando os requisitos atendidos, a arquitetura do sistema, e instruções detalhadas para instalação, configuração e testes.
+Este documento apresenta uma documentação completa do Sistema de Rede Social Distribuída desenvolvido para a disciplina de Sistemas Distribuidos da FEI, detalhando os requisitos atendidos, a arquitetura do sistema, e instruções detalhadas para instalação, configuração e testes.
 
 ## Sumário
 
