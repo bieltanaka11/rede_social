@@ -10,11 +10,21 @@ Este documento apresenta uma documentação completa do Sistema de Rede Social D
 4. [Instalação e Configuração](#instalação-e-configuração)
 5. [Como Testar o Sistema](#como-testar-o-sistema)
 6. [Roteiro de Testes](#roteiro-de-testes)
-7. [Logs e Monitoramento](#logs-e-monitoramento)
+7. [Roteiro de Testes (Detalhado)](#roteiro-de-testes)
 
 ## Visão Geral
 
 O Sistema de Rede Social Distribuída é uma plataforma que permite a interação entre usuários através de publicações de textos, sistema de seguidores e troca de mensagens privadas. O sistema foi implementado como um sistema distribuído, utilizando múltiplos servidores para garantir alta disponibilidade e consistência, com sincronização de relógios e ordenação de mensagens através de relógios lógicos.
+
+## Tecnologias e Padrões Usados
+
+| Componente              | Linguagem | Biblioteca / Protocolo  | Padrão                              |
+| ----------------------- | --------- | ----------------------- | ----------------------------------- |
+| Servidor de Posts       | Go        | github.com/pebbe/zmq4   | REP/REQ, PUB/SUB, PUSH/PULL         |
+| Coordenação de Relógios | Java      | Jeromq + Jackson        | PUB/SUB (Bully), REQ/REP (Berkeley) |
+| Cliente CLI             | Python    | pyzmq                   | REQ/REP, SUB (notifications)        |
+
+
 
 ### Principais Funcionalidades
 
@@ -288,24 +298,45 @@ wait
 
 Verifique a latência de replicação e notificação usando os timestamps nos logs.
 
-## Logs e Monitoramento
+## 🧪 Roteiro de Testes
 
-Todos os processos escrevem logs detalhados no diretório `logs/`:
+### A. Publicação de Posts & Notificações
 
-- `server0.log`, `server1.log`, `server2.log`: Logs dos servidores Go
-- `coordinator.log`: Log do coordenador Java
-- `user1.log`, `user2.log`, ..., `user5.log`: Logs dos clientes Python
+1. No client interativo (`user1`), escolha opção **1 - Post** e digite um texto.
+2. No log de `user2..user5`, espere pela notificação: `[NOTIFY] user1 posted: ...`.
+3. Verifique em `logs/server0.log` que o POST foi armazenado e replicado.
 
-Os logs seguem o formato `[timestamp][LAMPORT=…] ACTION details`, facilitando a auditoria de ordem e offsets.
+### B. Seguidores & Filtragem
 
-Para monitorar os logs em tempo real:
+1. No `user2`, escolha **2 - Follow**, digite `user1`.
+2. Faça novo post em `user1`.
+3. Garanta que **apenas** `user2` recebe NOTIFY.
+
+### C. Mensagens Privadas
+
+1. Em `user3`, opção **3 - Private Msg**, envie para `user4`.
+2. Confira ACK no console/`logs/user3.log`.
+3. Confira mensagem em `user4` ou `logs/user4.log`.
+
+### D. Eleição Bully & Sincronização Berkeley
+
+1. Pare o `server0` (SIGTERM ou `pkill -f server0`).
+2. Em `logs/coordinator.log`, veja eleição e anúncio de novo coordenador.
+3. Observe `SYNC_REQUEST`, múltiplos `SYNC_REPLY` e `SYNC_ADJUST` enviados.
+4. Reinicie `server0`, confira que ele reaplica o ajuste e volta ao cluster.
+
+### E. Teste de Carga
 
 ```bash
-tail -f logs/server0.log
+for i in {1..100}; do
+  echo -e "1\nLoad post $i\n0" | python3 python-client/client.py &
+done
+wait
 ```
 
-Para buscar eventos específicos:
+* Meça latência de replicação e notificação com timestamps de log.
 
-```bash
-grep "NOTIFY" logs/user*.log
-```
+---
+
+* Gabriel Carvalho
+* RA: 22.121.112-1
