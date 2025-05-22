@@ -1,4 +1,3 @@
-# scripts/start_servers.sh
 # Inicia 3 instâncias do Go Server e 1 instância do Java Coordinator
 
 set -e
@@ -6,12 +5,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="${SCRIPT_DIR}/.."
 LOG_DIR="${PROJECT_ROOT}/logs"
 
-# Cria diretório de logs
 mkdir -p "${LOG_DIR}"
 
-# Endereços e portas
 # Servidores Go escutam PULL em porta 5560, REP em 5555 e PUB em 5556
-# Cada instância faz PUSH para peers em 5560
 
 SERVERS=("server0" "server1" "server2")
 BASE_PULL_PORT=5560
