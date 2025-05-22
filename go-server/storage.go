@@ -6,12 +6,11 @@ import (
     "time"
 )
 
-// In-memory storage and logs
 type Storage struct {
     mu          sync.Mutex
-    Posts       []Message              // stored posts
-    Follows     map[string]map[string]bool // follower -> set of followed
-    PrivateMsgs map[string][]Message   // recipient ID -> list of private messages
+    Posts       []Message             
+    Follows     map[string]map[string]bool
+    PrivateMsgs map[string][]Message  
 }
 
 func NewStorage() *Storage {
@@ -22,7 +21,6 @@ func NewStorage() *Storage {
     }
 }
 
-// LogMessage appends to internal storage and prints log
 func (s *Storage) LogMessage(msg Message) {
     s.mu.Lock()
     defer s.mu.Unlock()
