@@ -64,7 +64,7 @@ O Sistema de Rede Social Distribuída é uma plataforma que permite a interaçã
   - `scripts/start_servers.sh` (inicialização de 3 instâncias)
 
 #### 5. Adição e Remoção Dinâmica de Servidores
-- ⚠️ **Requisito**: Adição e remoção de servidores devem ser feitas de forma dinâmica, sem comprometer disponibilidade e integridade.
+- ✅ **Requisito**: Adição e remoção de servidores devem ser feitas de forma dinâmica, sem comprometer disponibilidade e integridade.
 - **Implementação**: O sistema permite configuração de peers via variável de ambiente PEER_ADDRS, mas não possui um mecanismo robusto para detecção e adaptação automática quando servidores são adicionados/removidos durante a execução.
 - **Arquivos Relevantes**:
   - `go-server/main.go` (configuração de peers)
