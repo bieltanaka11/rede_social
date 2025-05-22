@@ -8,7 +8,7 @@ for i in $(seq 1 $CLIENT_COUNT); do
 ${USER_ID}
 0
 EOF
-  # envia USER_ID na entrada e sai em seguida (modo não interativo)
+  # envia USER_ID na entrada e sai em seguida 
 done
 
 echo "All clients started (${CLIENT_COUNT}). Logs in ${LOG_DIR}."
