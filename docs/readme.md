@@ -298,7 +298,7 @@ wait
 
 Verifique a latência de replicação e notificação usando os timestamps nos logs.
 
-## 🧪 Roteiro de Testes
+## 🧪 Roteiro de Testes (Detalhado)
 
 ### A. Publicação de Posts & Notificações
 
